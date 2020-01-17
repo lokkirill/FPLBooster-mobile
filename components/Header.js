@@ -5,13 +5,10 @@ import {
   View
 } from 'react-native';
 
-import StatusBar from './partials/header/StatusBar'
-
 export default class Header extends Component {
   render() {
     return (
-      <View>
-        <StatusBar />
+      <View style={styles.header}>
         <Text style={styles.text}>Privet, podstrizhisya!</Text>
       </View>
     );
@@ -20,13 +17,15 @@ export default class Header extends Component {
 
 const styles = StyleSheet.create({
   header: {
+    alignItems: "center",
+    backgroundColor: '#29333a',
     height: 56,
     justifyContent: "center",
-    alignItems: "center"
   },
   text: {
+    color: 'white',
     fontSize: 20,
-    textAlign: 'center',
     margin: 10,
+    textAlign: 'center',
   }
 });

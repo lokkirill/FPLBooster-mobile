@@ -7,7 +7,6 @@ export default class Header extends Component {
       <View
         style={{
           backgroundColor: 'white',
-          height: Platform.OS === 'ios' ? 20 : StatusBar.currentHeight,
         }}>
         <StatusBar
           barStyle="light-content"
