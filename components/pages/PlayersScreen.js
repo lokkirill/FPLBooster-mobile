@@ -1,78 +1,81 @@
 import React from 'react';
-// import { Text, View } from 'react-native';
-import { FlatList, ActivityIndicator, SectionList, StyleSheet, Text, View  } from 'react-native';
- 
-export default class HomeScreen extends React.Component {
+import axios from 'axios'; 
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+
+import { elementsQuickSort } from '../helpers/sort'
+
+export default class PlayersScreen extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      isLoading: true
+      isLoading: true,
+      dataSource: {
+        elements: [],
+        teams: []
+      },
     }
   }
 
   componentDidMount(){
-    return fetch('https://fantasy.premierleague.com/api/bootstrap-static/',
-    // return fetch('https://facebook.github.io/react-native/movies.json',
-      {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        }
-      })
-      .then((response) => (
-        console.log(response),
-        response.json())
-      )
-      .then((responseJson) => {
-        console.log(responseJson);
-        this.setState({
-          isLoading: false,
-          dataSource: responseJson.elements,
-        });
-      })
-      .catch((error) =>{
-        console.error(error);
+    return axios({
+      baseURL: 'https://fantasy.premierleague.com/api/bootstrap-static/',
+      responseType: 'json',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36',
+        'Sec-Fetch-User': '?1',
+        'Upgrade-Insecure-Requests': '1',
+      }
+    })
+    .then((response) => {
+      this.setState({
+        isLoading: false,
+        dataSource: {
+          ...response.data,
+          elements: elementsQuickSort(response.data.elements)
+        },
       });
+    })
+    .catch((error) =>{
+      console.error(error);
+    });
+  }
+
+  getByValue(arr, value) {
+    let result = arr.filter(function(o){return o.id == value;} );
+    return result ? result[0].short_name : null;
   }
 
   render(){
-    const { isLoading } = this.state
+    const { dataSource, isLoading } = this.state
+    const { elements, teams } = dataSource
 
     return(
-      <View style={{flex: 1}}>
-        {isLoading && <ActivityIndicator/>}
-        {!isLoading &&
+      <View style={styles.mainContainer}>
+        {isLoading
+          ?
+        <ActivityIndicator size="large"/>
+          :
         <View style={styles.container}>
-          {/* <SectionList
-            sections={[
-              {title: 'D', data: ['Devin', 'Dan', 'Dominic']},
-              {title: 'J', data: ['Jackson', 'James', 'Jillian', 'Jimmy', 'Joel', 'John', 'Julie']},
-            ]}
-            renderItem={({item}) => <Text style={styles.item}>{item}</Text>}
-            renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title}</Text>}
-            keyExtractor={(item, index) => index}
-          /> */}
-          
-          {/* <FlatList
-            data={[
-              {key: 'Devin'},
-              {key: 'Dan'},
-              {key: 'Dominic'},
-              {key: 'Jackson'},
-              {key: 'James'},
-              {key: 'Joel'},
-              {key: 'John'},
-              {key: 'Jillian'},
-              {key: 'Jimmy'},
-              {key: 'Julie'},
-            ]}
-            renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}
-          /> */}
-
           <FlatList
-            data={this.state.dataSource}
-            renderItem={({item}) => <Text>{item.id}, {item.code}</Text>}
-            keyExtractor={({id}, index) => id}
+            data={elements}
+            keyExtractor={item => item.id.toString()}
+            renderItem={({item}) =>
+              <TouchableHighlight style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth}}
+                // onPress={() => this._onPress(item)}
+                >
+                <View style={[{flex: 1, flexDirection: 'row'}]}>
+                  <View style={styles.club}>
+                    {/* <Text style={styles.title}>{this.getByValue(teams, item.team)}</Text> */}
+                    <Text style={styles.title}>{item.total_points}</Text>
+                  </View>
+                  {/* <View style={[styles.playerType, styles[`player${item.element_type}`]]}/> */}
+                  <View style={[styles.item]}>
+                    <Text style={styles.title}>{`${item.first_name} ${item.web_name}`}</Text>
+                  </View>
+                </View>
+              </TouchableHighlight>}
           />
         </View>}
       </View>
@@ -81,66 +84,39 @@ export default class HomeScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'white'
+  },
   container: {
-   flex: 1,
+    flex: 1,
+    backgroundColor: 'white',
   },
   item: {
-    padding: 10,
-    fontSize: 18,
-    height: 44,
+    fontSize: 12,
+    height: 40,
+  },
+  title: {
+    fontSize: 24,
+  },
+  club: {
+    width: 64,
+    alignItems: 'center'
+  },
+  playerType: {
+    width: 5
+  },
+  player1: { // goalkeeper - 1
+    backgroundColor: '#94c2f7',
+  },
+  player2: { // defender - 2
+    backgroundColor: '#a1f794',
+  },
+  player3: { // midfielder - 3
+    backgroundColor: '#f7ef94',
+  },
+  player4: { // forward - 4
+    backgroundColor: '#f79494',
   },
 })
-
-
-
-// import React from 'react';
-// import { FlatList, ActivityIndicator, Text, View  } from 'react-native';
-
-// export default class FetchExample extends React.Component {
-
-//   constructor(props){
-//     super(props);
-//     this.state ={ isLoading: true}
-//   }
-
-//   componentDidMount(){
-//     return fetch('https://facebook.github.io/react-native/movies.json')
-//       .then((response) => response.json())
-//       .then((responseJson) => {
-
-//         this.setState({
-//           isLoading: false,
-//           dataSource: responseJson.movies,
-//         }, function(){
-
-//         });
-
-//       })
-//       .catch((error) =>{
-//         console.error(error);
-//       });
-//   }
-
-
-
-//   render(){
-
-//     if(this.state.isLoading){
-//       return(
-//         <View style={{flex: 1, padding: 20}}>
-//           <ActivityIndicator/>
-//         </View>
-//       )
-//     }
-
-//     return(
-//       <View style={{flex: 1, paddingTop:20}}>
-//         <FlatList
-//           data={this.state.dataSource}
-//           renderItem={({item}) => <Text>{item.title}, {item.releaseYear}</Text>}
-//           keyExtractor={({id}, index) => id}
-//         />
-//       </View>
-//     );
-//   }
-// }

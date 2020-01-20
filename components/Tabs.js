@@ -1,9 +1,6 @@
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
-
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -64,8 +61,8 @@ const PlayersStack = createStackNavigator(
 
 const App = createBottomTabNavigator(
   {
-    Home: { screen: HomeStack },
     Players: { screen: PlayersStack },
+    Home: { screen: HomeStack },
     Settings: { screen: SettingsStack },
   },
   {

@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  View
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 
 import StatusBar from './components/partials/header/StatusBar'
