@@ -1,8 +1,10 @@
 import React from 'react';
 import axios from 'axios'; 
-import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 
 import { elementsQuickSort } from '../helpers/sort'
+import PlayerListItem from '../partials/player/PlayerListItem'
+
 
 export default class PlayersScreen extends React.Component {
   constructor(props){
@@ -10,8 +12,7 @@ export default class PlayersScreen extends React.Component {
     this.state = {
       isLoading: true,
       dataSource: {
-        elements: [],
-        teams: []
+        elements: []
       },
     }
   }
@@ -33,7 +34,7 @@ export default class PlayersScreen extends React.Component {
         isLoading: false,
         dataSource: {
           ...response.data,
-          elements: elementsQuickSort(response.data.elements)
+          elements: elementsQuickSort(this.playersData(response.data))
         },
       });
     })
@@ -42,40 +43,36 @@ export default class PlayersScreen extends React.Component {
     });
   }
 
-  getByValue(arr, value) {
-    let result = arr.filter(function(o){return o.id == value;} );
-    return result ? result[0].short_name : null;
+  playersData(data) {
+    const { elements, teams, element_types } = data
+    return elements.map(player => {
+      let team = teams.filter(team => {return team.id == player.team}); 
+      let element_type = element_types.filter(type => {return type.id == player.element_type}); 
+      
+      return {
+        ...player,
+        team: team ? team[0] : {id: player.team},
+        element_type: element_type ? element_type[0] : {id: player.element_type},
+        photo: `https://platform-static-files.s3.amazonaws.com/premierleague/photos/players/110x140/p${player.photo.split('.')[0]}.png`,
+      }
+    })
   }
 
   render(){
     const { dataSource, isLoading } = this.state
-    const { elements, teams } = dataSource
+    const { elements } = dataSource
 
     return(
       <View style={styles.mainContainer}>
         {isLoading
-          ?
+          ? 
         <ActivityIndicator size="large"/>
           :
         <View style={styles.container}>
           <FlatList
             data={elements}
             keyExtractor={item => item.id.toString()}
-            renderItem={({item}) =>
-              <TouchableHighlight style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth}}
-                // onPress={() => this._onPress(item)}
-                >
-                <View style={[{flex: 1, flexDirection: 'row'}]}>
-                  <View style={styles.club}>
-                    {/* <Text style={styles.title}>{this.getByValue(teams, item.team)}</Text> */}
-                    <Text style={styles.title}>{item.total_points}</Text>
-                  </View>
-                  {/* <View style={[styles.playerType, styles[`player${item.element_type}`]]}/> */}
-                  <View style={[styles.item]}>
-                    <Text style={styles.title}>{`${item.first_name} ${item.web_name}`}</Text>
-                  </View>
-                </View>
-              </TouchableHighlight>}
+            renderItem={({item}) => <PlayerListItem player={item}/>}
           />
         </View>}
       </View>
@@ -92,31 +89,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-  },
-  item: {
-    fontSize: 12,
-    height: 40,
-  },
-  title: {
-    fontSize: 24,
-  },
-  club: {
-    width: 64,
-    alignItems: 'center'
-  },
-  playerType: {
-    width: 5
-  },
-  player1: { // goalkeeper - 1
-    backgroundColor: '#94c2f7',
-  },
-  player2: { // defender - 2
-    backgroundColor: '#a1f794',
-  },
-  player3: { // midfielder - 3
-    backgroundColor: '#f7ef94',
-  },
-  player4: { // forward - 4
-    backgroundColor: '#f79494',
   },
 })
