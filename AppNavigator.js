@@ -5,11 +5,12 @@ import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
  
-import HomeScreen from './pages/HomeScreen';
-import SettingsScreen from './pages/SettingsScreen';
-import DetailsScreen from './pages/DetailsScreen';
-import PlayersScreen from './pages/PlayersScreen';
-import ProfileScreen from './pages/ProfileScreen';
+import HomeScreen from './src/containers/HomeScreen';
+import SettingsScreen from './src/containers/SettingsScreen';
+import DetailsScreen from './src/containers/DetailsScreen';
+import PlayerScreen from './src/containers/PlayerScreen';
+import PlayersScreen from './src/containers/PlayersScreen';
+import ProfileScreen from './src/containers/ProfileScreen';
 
 const HomeStack = createStackNavigator(
   {
@@ -47,6 +48,7 @@ const SettingsStack = createStackNavigator(
 const PlayersStack = createStackNavigator(
   {
     Players: { screen: PlayersScreen },
+    Player: { screen: PlayerScreen },
   },
   {
     defaultNavigationOptions: {
