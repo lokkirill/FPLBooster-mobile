@@ -1,41 +1,46 @@
 import React from 'react';
-import { ImageBackground, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import { ImageBackground, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 
 export default class PlayerListItem extends React.Component {
+  _openPlayerScreen(player) {
+    this.props.navigation.navigate('Player', { player })
+  }
+  
   render(){
     const { player } = this.props
 
     return(
-      <View style={styles.container}>
-        <TouchableHighlight>
-          <View>
-            <View style={[styles.playerContainer, styles.horizontalFlex]}>
-              {/* Image (left part) */}
-              <View style={[styles.imageContainer]}>
-                <ImageBackground
-                  style={styles.imageBackground}
-                  imageStyle={{ borderRadius: 10}}
-                  source={{ uri: player.photo }}
-                />
-              </View>
-              {/* Data (right part) */}
-              <View style={[styles.dataContainer]}>
-                <View style={[styles.verticalFlex]}>
-                  <View style={[styles.horizontalFlex]}>
-                    <Text style={styles.name}> 
-                      {`${player.first_name} ${player.web_name}`}
-                    </Text>
-                    <Text style={[styles.playerPosition, styles[`pos${player.element_type.singular_name_short}`]]}>
-                      {player.element_type.singular_name_short}
-                    </Text>
-                  </View>  
-                  <Text style={styles.club}>{`${player.team.name}`}</Text>
-                  <Text style={styles.club}>{`${player.team.name}`}</Text>
-                </View>
+      <View style={[styles.container, styles.element]}>
+        <TouchableWithoutFeedback
+          onPress={() => this._openPlayerScreen(player)}
+          style={styles.element}
+          >
+          <View style={[styles.playerContainer, styles.horizontalFlex]}>
+            {/* Image (left part) */}
+            <View style={[styles.imageContainer]}>
+              <ImageBackground
+                style={styles.imageBackground}
+                imageStyle={{ borderRadius: 10}}
+                source={{ uri: player.photo }}
+              />
+            </View>
+            {/* Data (right part) */}
+            <View style={[styles.dataContainer]}>
+              <View style={[styles.verticalFlex]}>
+                <View style={[styles.horizontalFlex]}>
+                  <Text style={styles.name}> 
+                    {`${player.first_name} ${player.web_name}`}
+                  </Text>
+                  <Text style={[styles.playerPosition, styles[`pos${player.element_type.singular_name_short}`]]}>
+                    {player.element_type.singular_name_short}
+                  </Text>
+                </View>  
+                <Text style={styles.club}>{`${player.team.name}`}</Text>
+                <Text style={styles.club}>{`${player.team.name}`}</Text>
               </View>
             </View>
-           </View>
-        </TouchableHighlight>
+          </View>
+        </TouchableWithoutFeedback>
       </View>
     );
   }
@@ -57,10 +62,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 
-  container: {
-    backgroundColor: '#F0F0F0',
-    borderRadius: 15,
+  element: {
     height: 90,
+  },
+  container: {
+    borderRadius: 15,
+    backgroundColor: '#F0F0F0',
     marginTop: 10,
     marginLeft: 10,
     marginRight: 10,

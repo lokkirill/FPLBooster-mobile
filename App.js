@@ -1,21 +1,30 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import thunk from 'redux-thunk';
+
 import SplashScreen from 'react-native-splash-screen';
 
-import StatusBar from './components/partials/header/StatusBar'
-import Tabs from './components/Tabs';
+import * as reducers from './src/store/reducers';
+import AppNavigator from './AppNavigator';
+import StatusBar from './src/components/header/StatusBar'
 
-export default class HelloWorldApp extends Component {
+const store = createStore(combineReducers(reducers), applyMiddleware(thunk));
+
+export default class App extends Component {
   componentDidMount() {
     SplashScreen.hide();
   }
-  
+
   render() {
     return (
-      <View style={styles.main}>
-        <StatusBar />
-        <Tabs />
-      </View>
+      <Provider store={store}>
+        <View style={styles.main}>
+          <StatusBar />
+          <AppNavigator />
+        </View>
+      </Provider>
     );
   }
 }
