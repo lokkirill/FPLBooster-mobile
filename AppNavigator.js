@@ -47,8 +47,17 @@ const SettingsStack = createStackNavigator(
 
 const PlayersStack = createStackNavigator(
   {
-    Players: { screen: PlayersScreen },
-    Player: { screen: PlayerScreen },
+    Players: {
+      screen: PlayersScreen,
+      path: 'players',
+    },
+    Player: {
+      screen: PlayerScreen,
+      path: 'player/:id',
+      navigationOptions: ({ navigation }) => ({
+        title: `${navigation.state.params.player.first_name} ${navigation.state.params.player.web_name}`,
+      }),
+    },
   },
   {
     defaultNavigationOptions: {
@@ -60,6 +69,7 @@ const PlayersStack = createStackNavigator(
     },
   }
 );
+
 
 const App = createBottomTabNavigator(
   {

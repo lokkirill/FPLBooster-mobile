@@ -7,6 +7,7 @@ export function fetchFPLData() {
     dispatch({ type: types.FETCH_FPL_DATA_PENDING })
     try {
       const fplData = await FPLApiService.fetchFPLData();
+      console.log(Object.keys(fplData));
       dispatch({ type: types.FETCH_FPL_DATA_SUCCESS, fplData });
     } catch (error) {
       dispatch({ type: types.FETCH_FPL_DATA_ERROR, error });

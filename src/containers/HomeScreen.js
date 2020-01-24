@@ -1,35 +1,57 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
- 
-export default class HomeScreen extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ marginTop: 50, fontSize: 25 }}>Home!</Text>
-        <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate('Settings')}>
-            <Text>Go to settng Tab</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate('Details')}>
-            <Text>Open Details Screen</Text>
-          </TouchableOpacity>
-        </View>
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { connect } from 'react-redux';
+import * as playersSelectors from '../store/players/reducer';
+
+class PlayersScreen extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      isLoading: false,
+      dataSource: {
+        elements: []
+      },
+    }
+  }
+
+  render(){
+    return(
+      <View style={styles.mainContainer}>
+        <ScrollView>
+          <Text>
+            {JSON.stringify(this.props.getPreviousGameWeek, null, 4)}
+          </Text>
+          <Text>
+            {JSON.stringify(this.props.getCurrentGameWeek, null, 4)}
+          </Text>
+          <Text>
+            {JSON.stringify(this.props.getNextGameWeek, null, 4)}
+          </Text>
+        </ScrollView>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 10,
-    width: 300,
-    marginTop: 16,
+  mainContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'white'
   },
-});
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+})
+
+const mapStateToProps = (state) => {
+  return {
+    getGameWeeks: playersSelectors.getGameWeeks(state),
+    getPreviousGameWeek: playersSelectors.getPreviousGameWeek(state),
+    getCurrentGameWeek: playersSelectors.getCurrentGameWeek(state),
+    getNextGameWeek: playersSelectors.getNextGameWeek(state),
+  };
+}
+
+export default connect(mapStateToProps)(PlayersScreen);

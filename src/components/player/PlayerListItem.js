@@ -14,7 +14,7 @@ export default class PlayerListItem extends React.Component {
         <TouchableWithoutFeedback
           onPress={() => this._openPlayerScreen(player)}
           style={styles.element}
-          >
+        >
           <View style={[styles.playerContainer, styles.horizontalFlex]}>
             {/* Image (left part) */}
             <View style={[styles.imageContainer]}>
@@ -132,15 +132,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   posGKP: {
-    backgroundColor: '#94c2f7',
+    backgroundColor: '#ebff00',
   },
   posDEF: {
-    backgroundColor: '#a1f794',
+    backgroundColor: '#00ff87',
   },
   posMID: {
-    backgroundColor: '#f7ef94',
+    backgroundColor: '#05f0ff',
   },
   posFWD: {
-    backgroundColor: '#f79494',
+    backgroundColor: '#e90052',
+    color: 'white'
   },
 })
