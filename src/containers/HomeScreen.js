@@ -19,13 +19,7 @@ class PlayersScreen extends React.Component {
       <View style={styles.mainContainer}>
         <ScrollView>
           <Text>
-            {JSON.stringify(this.props.getPreviousGameWeek, null, 4)}
-          </Text>
-          <Text>
-            {JSON.stringify(this.props.getCurrentGameWeek, null, 4)}
-          </Text>
-          <Text>
-            {JSON.stringify(this.props.getNextGameWeek, null, 4)}
+            {JSON.stringify(this.props.getTeams, null, 4)}
           </Text>
         </ScrollView>
       </View>
@@ -47,10 +41,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-    getGameWeeks: playersSelectors.getGameWeeks(state),
-    getPreviousGameWeek: playersSelectors.getPreviousGameWeek(state),
-    getCurrentGameWeek: playersSelectors.getCurrentGameWeek(state),
-    getNextGameWeek: playersSelectors.getNextGameWeek(state),
+    getTeams: playersSelectors.getTeams(state),
   };
 }
 

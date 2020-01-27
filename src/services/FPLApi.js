@@ -6,11 +6,15 @@ class FPLApiService {
       baseURL: 'https://fantasy.premierleague.com/api/bootstrap-static/',
       responseType: 'json',
       headers: {
+        Accept: 'application/json',	
+        'Content-Type': 'application/json',	
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36',	
+        'Sec-Fetch-User': '?1',	
         'Upgrade-Insecure-Requests': '1',
       }
     })
     if (response.status !== 200) {
-      throw new Error(`RedditService getDefaultSubreddits failed, HTTP status ${response.status}`);
+      throw new Error(`FPLApiService fetchFPLData failed, HTTP status ${response.status}`);
     }
     const finalData = this._FPLData(response.data)
     return finalData
@@ -18,20 +22,28 @@ class FPLApiService {
 
   _FPLData (data) {
     const { elements, teams, element_types } = data
+    const teamsWithImage = teams.map(team => {
+      return {
+        ...team,
+        image: `https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_${team.code}-66.webp`,
+      }  
+    })
+
     const sortedElements = this._elementsQuickSort(elements.map(player => {
-      let team = teams.filter(team => {return team.id == player.team}); 
+      let team = teamsWithImage.filter(team => {return team.id == player.team}); 
       let element_type = element_types.filter(type => {return type.id == player.element_type}); 
       
       return {
         ...player,
         photo: `https://platform-static-files.s3.amazonaws.com/premierleague/photos/players/110x140/p${player.photo.split('.')[0]}.png`,
-        team: team ? team[0] : {id: player.team},
-        element_type: element_type ? element_type[0] : {id: player.element_type},
+        team: team ? team[0] : { id: player.team },
+        element_type: element_type ? element_type[0] : { id: player.element_type },
       }
     }))
 
     return {
       ...data,
+      teams: teamsWithImage,
       elements: sortedElements
     }
   }

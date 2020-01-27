@@ -10,6 +10,8 @@ import SettingsScreen from './src/containers/SettingsScreen';
 import DetailsScreen from './src/containers/DetailsScreen';
 import PlayerScreen from './src/containers/PlayerScreen';
 import PlayersScreen from './src/containers/PlayersScreen';
+// import TeamScreen from './src/containers/TeamScreen';
+import TeamsScreen from './src/containers/TeamsScreen';
 import ProfileScreen from './src/containers/ProfileScreen';
 
 const HomeStack = createStackNavigator(
@@ -20,7 +22,7 @@ const HomeStack = createStackNavigator(
   {
     defaultNavigationOptions: {
       headerStyle: {
-        backgroundColor: '#29333a',
+        backgroundColor: '#37003c',
       },
       headerTintColor: '#FFFFFF',
       title: 'Home',
@@ -37,7 +39,7 @@ const SettingsStack = createStackNavigator(
   {
     defaultNavigationOptions: {
       headerStyle: {
-        backgroundColor: '#29333a',
+        backgroundColor: '#37003c',
       },
       headerTintColor: '#FFFFFF',
       title: 'Settings',
@@ -62,7 +64,7 @@ const PlayersStack = createStackNavigator(
   {
     defaultNavigationOptions: {
       headerStyle: {
-        backgroundColor: '#29333a',
+        backgroundColor: '#37003c',
       },
       headerTintColor: '#FFFFFF',
       title: 'Players',
@@ -70,10 +72,35 @@ const PlayersStack = createStackNavigator(
   }
 );
 
+const TeamsStack = createStackNavigator(
+  {
+    Teams: {
+      screen: TeamsScreen,
+      path: 'teams',
+    },
+    // Team: {
+    //   screen: TeamScreen,
+    //   path: 'team/:id',
+    //   navigationOptions: ({ navigation }) => ({
+    //     title: `${navigation.state.params.player.first_name} ${navigation.state.params.player.web_name}`,
+    //   }),
+    // },
+  },
+  {
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: '#37003c',
+      },
+      headerTintColor: '#FFFFFF',
+      title: 'Teams',
+    },
+  }
+);
 
 const App = createBottomTabNavigator(
   {
     Players: { screen: PlayersStack },
+    Teams: { screen: TeamsStack },
     Home: { screen: HomeStack },
     Settings: { screen: SettingsStack },
   },
@@ -85,6 +112,8 @@ const App = createBottomTabNavigator(
         let iconName;
         
         if (routeName === 'Players') {
+          return <IconComponent name={`${Platform.OS === "ios" ? "ios" : "md"}-person`} size={25} color={tintColor} />;
+        } else if (routeName === 'Teams') {
           return <IconComponent name={`${Platform.OS === "ios" ? "ios" : "md"}-people`} size={25} color={tintColor} />;
         } else {
           if (routeName === 'Home') {
