@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageBackground, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { ImageBackground, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 
 export default class PlayerListItem extends React.Component {
   _openPlayerScreen(player) {
@@ -11,16 +11,17 @@ export default class PlayerListItem extends React.Component {
 
     return(
       <View style={[styles.container, styles.element]}>
-        <TouchableWithoutFeedback
+        <TouchableHighlight
           onPress={() => this._openPlayerScreen(player)}
           style={styles.element}
+          underlayColor="#F0F0F0"
         >
           <View style={[styles.playerContainer, styles.horizontalFlex]}>
             {/* Image (left part) */}
             <View style={[styles.imageContainer]}>
               <ImageBackground
                 style={styles.imageBackground}
-                imageStyle={{ borderRadius: 10}}
+                // imageStyle={{ borderRadius: 10}}
                 source={{ uri: player.photo }}
               />
             </View>
@@ -29,7 +30,7 @@ export default class PlayerListItem extends React.Component {
               <View style={[styles.verticalFlex]}>
                 <View style={[styles.horizontalFlex]}>
                   <Text style={styles.name}> 
-                    {`${player.first_name} ${player.web_name}`}
+                    {`${player.first_name} ${player.second_name}`}
                   </Text>
                   <Text style={[styles.playerPosition, styles[`pos${player.element_type.singular_name_short}`]]}>
                     {player.element_type.singular_name_short}
@@ -40,7 +41,7 @@ export default class PlayerListItem extends React.Component {
               </View>
             </View>
           </View>
-        </TouchableWithoutFeedback>
+        </TouchableHighlight>
       </View>
     );
   }
@@ -66,10 +67,10 @@ const styles = StyleSheet.create({
     height: 90,
   },
   container: {
-    borderRadius: 15,
+    // borderRadius: 15,
     backgroundColor: '#F0F0F0',
-    marginLeft: 10,
-    marginRight: 10,
+    marginLeft: 5,
+    marginRight: 5,
     marginTop: 5,
     marginBottom: 5,
     shadowColor: "#000",
@@ -83,8 +84,8 @@ const styles = StyleSheet.create({
   },
   playerContainer: {
     marginTop: 10,
-    marginLeft: 10,
     marginBottom: 5,
+    marginLeft: 10,
     marginRight: 10,
   },
 
@@ -96,15 +97,18 @@ const styles = StyleSheet.create({
     width: 55,
     height: 70,
     backgroundColor: 'white',
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.33,
-    shadowRadius: 1.27,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    
+    // borderRadius: 10,
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 3,
+    // },
+    // shadowOpacity: 0.33,
+    // shadowRadius: 1.27,
+    // elevation: 2,
   },
   
   dataContainer: {
@@ -126,7 +130,7 @@ const styles = StyleSheet.create({
 
   // Position
   playerPosition: {
-    borderRadius: 6,
+    // borderRadius: 6,
     flex: 1,
     fontSize: 16,
     marginRight: 0,

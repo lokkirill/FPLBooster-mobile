@@ -48,6 +48,7 @@ class FPLApiService {
     }
   }
 
+  // Quick sort by points for elements
   _elementsQuickSort(items, left, right) {
     let index;
     if (items.length > 1) {
@@ -63,7 +64,6 @@ class FPLApiService {
     }
     return items;
   }
-  
   _partition(items, left, right) {
     let pivot = items[Math.floor((right + left) / 2)].total_points,
         i     = left,
@@ -83,7 +83,6 @@ class FPLApiService {
     }
     return i;
   }
-  
   _swap(items, firstIndex, secondIndex) {
     const temp = items[firstIndex];
     items[firstIndex] = items[secondIndex];

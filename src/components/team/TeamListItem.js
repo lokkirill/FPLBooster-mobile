@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 
 const Position = ({ position }) => {
   return <View style={styles.container}>
@@ -7,6 +7,41 @@ const Position = ({ position }) => {
       {position}
     </Text>
   </View>
+}
+
+const Logo = ({ teamCode }) => {
+  return <View style={styles.container}>
+    <Image
+      source={teamLogo(teamCode)}
+      style={styles.icon25} />
+  </View>
+}
+
+const teamLogo = (teamCode) => {
+  // te most shit of the shit I've ever did
+  switch (teamCode) {
+    case 1:  return require('../../images/teams/1.png');
+    case 3:  return require('../../images/teams/3.png');
+    case 4:  return require('../../images/teams/4.png');
+    case 6:  return require('../../images/teams/6.png');
+    case 7:  return require('../../images/teams/7.png');
+    case 8:  return require('../../images/teams/8.png');
+    case 11: return require('../../images/teams/11.png');
+    case 13: return require('../../images/teams/13.png');
+    case 14: return require('../../images/teams/14.png');
+    case 20: return require('../../images/teams/20.png');
+    case 21: return require('../../images/teams/21.png');
+    case 31: return require('../../images/teams/31.png');
+    case 36: return require('../../images/teams/36.png');
+    case 39: return require('../../images/teams/39.png');
+    case 43: return require('../../images/teams/43.png');
+    case 45: return require('../../images/teams/45.png');
+    case 49: return require('../../images/teams/49.png');
+    case 57: return require('../../images/teams/57.png');
+    case 90: return require('../../images/teams/90.png');
+    case 91: return require('../../images/teams/91.png');
+    default: return require('../../images/teams/default.png');
+  }
 }
 
 const Name = ({ name }) => {
@@ -46,15 +81,15 @@ export default class PlayerListItem extends React.Component {
     }
   }
   
-  render(){
-    const { team, results } = this.props.team
-    
+  render() {
+    const { team } = this.props
 
     return(
       <View style={[styles.horizontalFlex, styles.element]}>
-        <Position position={results.position} />
+        <Position position={team.results.position} />
+        <Logo teamCode={team.code} />
         <Name name={team.name} />
-        <Points stats={results[this.state.pointsMode]}/>
+        <Points stats={team.results[this.state.pointsMode]}/>
       </View>
     );
   }
@@ -62,8 +97,8 @@ export default class PlayerListItem extends React.Component {
 
 const styles = StyleSheet.create({
   container :{
-    justifyContent: 'center', //Centered vertically
-    alignItems: 'center', // Centered horizontally
+    justifyContent: 'center',
+    alignItems: 'center',
     flex:1
   },
   verticalFlex: {
@@ -74,16 +109,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   element: {
-    height: 32,
-    
+    height: 36,
   },
 
   name: {
-    flex: 6,
+    flex: 5,
     justifyContent: 'center',
   },
   nameText: {
-    fontSize: 18,
+    fontSize: 16,
   },
 
   points: {
@@ -93,83 +127,10 @@ const styles = StyleSheet.create({
   textCenter: {
     textAlign: 'center',
     textAlignVertical: 'center',
-    fontSize: 18,
+    fontSize: 16,
   },
-
-  // container: {
-  //   // borderRadius: 15,
-  //   backgroundColor: '#F0F0F0',
-  //   shadowColor: "#000",
-  //   shadowOffset: {
-  //     width: 0,
-  //     height: 3,
-  //   },
-  //   shadowOpacity: 0.33,
-  //   shadowRadius: 3.27,
-  //   elevation: 5,
-  // },
-  // playerContainer: {
-  //   marginTop: 10,
-  //   marginLeft: 10,
-  //   marginBottom: 5,
-  //   marginRight: 10,
-  // },
-
-  // Image
-  // imageContainer: {
-  //   flex: 1,
-  // },
-  // imageBackground: {
-  //   width: 55,
-  //   height: 70,
-  //   backgroundColor: 'white',
-  //   borderRadius: 10,
-  //   shadowColor: "#000",
-  //   shadowOffset: {
-  //     width: 0,
-  //     height: 3,
-  //   },
-  //   shadowOpacity: 0.33,
-  //   shadowRadius: 1.27,
-  //   elevation: 2,
-  // },
-  
-  // dataContainer: {
-  //   flex: 6,
-  //   height: 70,
-  // },
-  
-  // Text
-  // name: {
-  //   flex: 5.5,
-  //   fontSize: 18,
-  //   marginLeft: 10,
-  // },
-  // club: {
-  //   flex: 1,
-  //   fontSize: 16,
-  //   marginLeft: 10,
-  // },
-
-  // Position
-  // playerPosition: {
-  //   borderRadius: 6,
-  //   flex: 1,
-  //   fontSize: 16,
-  //   marginRight: 0,
-  //   textAlign: 'center',
-  // },
-  // posGKP: {
-  //   backgroundColor: '#ebff00',
-  // },
-  // posDEF: {
-  //   backgroundColor: '#00ff87',
-  // },
-  // posMID: {
-  //   backgroundColor: '#05f0ff',
-  // },
-  // posFWD: {
-  //   backgroundColor: '#e90052',
-  //   color: 'white'
-  // },
+  icon25: {
+    width: 25,
+    height: 25,
+  },
 })

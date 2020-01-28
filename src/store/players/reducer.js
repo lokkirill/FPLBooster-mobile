@@ -69,8 +69,8 @@ export const getTable = (state) => {
   return state.players.table.map(team => {
     const teamArr = filterArray(state.players.teams, 'short_name', team.team.club.abbr)
     return {
+      ...teamArr[0],
       results: team,
-      team: teamArr[0] ? teamArr[0] : {}
     }
   });
 }

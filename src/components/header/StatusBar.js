@@ -10,7 +10,7 @@ export default class Header extends Component {
         }}>
         <StatusBar
           barStyle="light-content"
-          backgroundColor="#000000"
+          backgroundColor="#37003c"
         />
       </View>
     );
