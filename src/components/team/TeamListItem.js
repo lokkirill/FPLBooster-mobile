@@ -1,106 +1,82 @@
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 
-const Position = ({ position }) => {
-  return <View style={styles.container}>
-    <Text style={[styles.formItemHeadText, styles.textCenter]}>
-      {position}
-    </Text>
-  </View>
-}
+import Divider from './Divider'
+import Form from './Form'
+import Goals from './Goals'
+import Logo from './Logo'
+import Name from './Name'
+import Points from './Points'
+import Position from './Position'
+import PositionChange from './PositionChange'
 
-const Logo = ({ teamCode }) => {
-  return <View style={styles.container}>
-    <Image
-      source={teamLogo(teamCode)}
-      style={styles.icon25} />
-  </View>
-}
-
-const teamLogo = (teamCode) => {
-  // te most shit of the shit I've ever did
-  switch (teamCode) {
-    case 1:  return require('../../images/teams/1.png');
-    case 3:  return require('../../images/teams/3.png');
-    case 4:  return require('../../images/teams/4.png');
-    case 6:  return require('../../images/teams/6.png');
-    case 7:  return require('../../images/teams/7.png');
-    case 8:  return require('../../images/teams/8.png');
-    case 11: return require('../../images/teams/11.png');
-    case 13: return require('../../images/teams/13.png');
-    case 14: return require('../../images/teams/14.png');
-    case 20: return require('../../images/teams/20.png');
-    case 21: return require('../../images/teams/21.png');
-    case 31: return require('../../images/teams/31.png');
-    case 36: return require('../../images/teams/36.png');
-    case 39: return require('../../images/teams/39.png');
-    case 43: return require('../../images/teams/43.png');
-    case 45: return require('../../images/teams/45.png');
-    case 49: return require('../../images/teams/49.png');
-    case 57: return require('../../images/teams/57.png');
-    case 90: return require('../../images/teams/90.png');
-    case 91: return require('../../images/teams/91.png');
-    default: return require('../../images/teams/default.png');
-  }
-}
-
-const Name = ({ name }) => {
-  return <View style={[styles.name]}>
-    <Text style={[styles.nameText]}>
-      {name}
-    </Text>
-  </View>
-}
-
-const Points = ({ stats }) => {
-  return <View style={[styles.container, styles.horizontalFlex, styles.points]}>
-    <Text style={[styles.verticalFlex, styles.textCenter]}>
-      {stats.played}
-    </Text>
-    <Text style={[styles.verticalFlex, styles.textCenter]}>
-      {stats.won}
-    </Text>
-    <Text style={[styles.verticalFlex, styles.textCenter]}>
-      {stats.drawn}
-    </Text>
-    <Text style={[styles.verticalFlex, styles.textCenter]}>
-      {stats.lost}
-    </Text>
-    <Text style={[styles.verticalFlex, styles.textCenter]}>
-      {stats.points}
-    </Text>
-  </View>
-}
-
-export default class PlayerListItem extends React.Component {
+export default class TeamListItem extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      opened: false,
-      pointsMode: 'overall', // overall/home/away
+      opened: false, // true / false / Math.random(1) > 0.8
     }
   }
-  
+
+  openOrClose = () => {
+    this.setState(prevstate => ({
+      opened: !prevstate.opened
+    })
+  )}
+
+  formArr = (teamShortName, form) => {
+    return form.map(fe => {
+      const teamScore     = fe.teams.filter(el => {return el.team.club.abbr == teamShortName})[0].score
+      const opponentScore = fe.teams.filter(el => {return el.team.club.abbr != teamShortName})[0].score
+      
+      return teamScore > opponentScore ? 'W' : teamScore < opponentScore ? 'L' : 'D'
+    })
+  }
+
   render() {
-    const { team } = this.props
+    const { team, pointsMode } = this.props
+    const { opened } = this.state
+    const form = this.formArr(team.short_name, team.results.form)
 
     return(
-      <View style={[styles.horizontalFlex, styles.element]}>
-        <Position position={team.results.position} />
-        <Logo teamCode={team.code} />
-        <Name name={team.name} />
-        <Points stats={team.results[this.state.pointsMode]}/>
-      </View>
+      (<TouchableWithoutFeedback
+        onPress={this.openOrClose}>
+        <View style={[styles.verticalFlex, styles[opened ? 'openedTeamContainer' : 'teamContainer']]}>
+          {/* Main line */}
+          <View style={[styles.horizontalFlex, styles.mainElement]}>
+            <Position position={team.results.position} />
+            <Divider />
+            <Logo teamCode={team.code} />
+            <Name name={team.name} />
+            <Divider />
+            <Points stats={team.results[pointsMode]} />
+          </View>
+          {/* Additional data */}
+          {opened && (
+            <View style={[styles.horizontalFlex, styles.secondaryElement]}>
+              <PositionChange results={team.results}/>
+              <Divider />
+              <Form form={form} />
+              <Divider />
+              <Goals stats={team.results[pointsMode]} />
+            </View>)}
+        </View>
+      </TouchableWithoutFeedback>)
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container :{
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex:1
+TeamListItem.defaultProps = {
+  pointsMode: 'overall', // overall/home/away
+  team: {
+    short_name: '',
+    results: {
+      form: [],
+    }
   },
+}
+
+const styles = StyleSheet.create({
   verticalFlex: {
     flex: 1,
   },
@@ -108,29 +84,24 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
   },
-  element: {
+  teamContainer: {
     height: 36,
   },
-
-  name: {
-    flex: 5,
-    justifyContent: 'center',
+  openedTeamContainer: {
+    height: 72,
   },
-  nameText: {
-    fontSize: 16,
+  mainElement: {
+    backgroundColor: '#eeeeee',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.33,
+    shadowRadius: 3,
+    elevation: 3,
   },
-
-  points: {
-    flex: 5,
-  },
-
-  textCenter: {
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontSize: 16,
-  },
-  icon25: {
-    width: 25,
-    height: 25,
+  secondaryElement: {
+    backgroundColor: '#FFF',
   },
 })

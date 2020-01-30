@@ -18,6 +18,7 @@ class PlayersScreen extends React.Component {
 
   componentDidMount() {
     this.props.dispatch(playersActions.fetchFPLData());
+    this.props.dispatch(playersActions.fetchPLTableData());
   }
 
   render(){

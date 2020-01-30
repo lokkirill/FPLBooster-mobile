@@ -14,12 +14,29 @@ class PlayersScreen extends React.Component {
     }
   }
 
-  render(){
+  render() {
+    const table = this.props.getTable
+    
+    const firstTeamForm = table[0].results.form
+    // .map(element => {
+    //   return element.teams.map(element => {
+    //     return `${element.team.id} - ${element.score}`
+    //   })
+    // })
+
+    const firstTeam = table.map(element => {
+      return element
+    })
+
     return(
       <View style={styles.mainContainer}>
         <ScrollView>
           <Text>
-            {JSON.stringify(this.props.getTeams, null, 4)}
+            {JSON.stringify(firstTeam, null, 4)}
+          </Text>
+        
+          <Text>
+            {JSON.stringify(firstTeamForm, null, 4)}
           </Text>
         </ScrollView>
       </View>
@@ -41,7 +58,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-    getTeams: playersSelectors.getTeams(state),
+    getTable: playersSelectors.getTable(state),
   };
 }
 

@@ -57,14 +57,6 @@ export const getNextGameWeek = (state) => {
 export const getTeams = (state) => {
   return state.players.teams ? state.players.teams : [];
 }
-// export const getTeamByID = (state, id) => {
-//   const teamArr = filterArray(state.players.teams, 'id', id)
-//   return teamArr[0] ? teamArr[0] : {};
-// }
-// export const getTeamByCode = (state, code) => {
-//   const teamArr = filterArray(state.players.teams, 'code', code)
-//   return teamArr[0] ? teamArr[0] : {};
-// }
 export const getTable = (state) => {
   return state.players.table.map(team => {
     const teamArr = filterArray(state.players.teams, 'short_name', team.team.club.abbr)

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import * as playersActions from '../store/players/actions';
 import * as playersSelectors from '../store/players/reducer';
@@ -9,7 +9,8 @@ import TeamListItem from '../components/team/TeamListItem'
 const Header = () => {
   return <View style={styles.header}>
     <View style={styles.horizontalFlex}>
-      <View style={{flex: 7}}/>
+      <Text style={[styles.text, styles.columnText]}>{'#'}</Text>
+      <View style={{flex: 6.5}}/>
       <Text style={[styles.text, styles.columnText]}>{'G'}</Text>
       <Text style={[styles.text, styles.columnText]}>{'W'}</Text>
       <Text style={[styles.text, styles.columnText]}>{'D'}</Text>
@@ -20,9 +21,20 @@ const Header = () => {
 }
 
 class TeamsScreen extends React.Component {
-  componentDidMount() {
-    this.props.dispatch(playersActions.fetchPLTableData());
+  constructor(props){
+    super(props);
+    this.state = {
+      loading: true,
+    }
   }
+  
+  componentDidMount() {
+    this.props.dispatch(playersActions.fetchFPLData());
+    this.props.dispatch(playersActions.fetchPLTableData());
+    this.setState({
+      loading: false
+    }
+  )}
 
   renderSeparator = () => (
     <View
@@ -34,7 +46,15 @@ class TeamsScreen extends React.Component {
   );
 
   render(){
+    const { loading } = this.state
+
     return(
+      loading
+        ?
+      <View style={styles.horizontalFlex}>
+        <ActivityIndicator size="large" color="#37003c" />
+      </View>
+        :
       <View style={styles.mainContainer}>
         <Header />
         <View style={styles.container}>
@@ -43,6 +63,7 @@ class TeamsScreen extends React.Component {
             keyExtractor={item => item.id.toString()}
             ItemSeparatorComponent={this.renderSeparator}
             renderItem={({item, index}) => <TeamListItem team={item} index={index} {...this.props} />}
+            initialNumToRender={20}
           />  
         </View>
       </View>
@@ -60,14 +81,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flex: 1,
   },
-  // container :{
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   flex:1
-  // },
-  // verticalFlex: {
-  //   flex: 1,
-  // },
   horizontalFlex: {
     flex: 1,
     flexDirection: 'row',
@@ -76,7 +89,7 @@ const styles = StyleSheet.create({
   },
   header: {
     height: 24,
-    backgroundColor: '#eee',
+    backgroundColor: '#c8c8c8',
   },
   text: {
     fontSize: 12,
@@ -86,18 +99,6 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
   },
-
-  // name: {
-  //   flex: 5,
-  //   justifyContent: 'center',
-  // },
-  // nameText: {
-  //   fontSize: 18,
-  // },
-
-  // points: {
-  //   flex: 5,
-  // },
 })
 
 const mapStateToProps = (state) => {
